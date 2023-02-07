@@ -1,0 +1,41 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: homer-dashboard
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  url: https://k8s-at-home.com/charts/
+
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: homer-dashboard
+  namespace: flux-system
+spec:
+  releaseName: homer-dashboard
+  interval: 10m0s
+  chart:
+    spec:
+      chart: homer
+      sourceRef:
+        kind: HelmRepository
+        name: homer-dashboard
+        namespace: flux-system
+      version: 8.0.2
+  targetNamespace: homer-dashboard
+  values:
+    image:
+      repository: b4bz/homer
+      tag: v23.02.1
+    ingress:
+      main:
+        enabled: true
+        annotations:
+          nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+        hosts:
+          - host: dashboard.example.com
+            paths:
+              - path: /
+                pathType: Prefix

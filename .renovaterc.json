@@ -1,0 +1,19 @@
+{
+    "enabled": true,
+    "flux": {
+        "fileMatch": [
+            "^cluster-[a-z]+/.*\\.ya?ml$"
+        ]
+    },
+    "regexManagers": [
+        {
+            "fileMatch": [
+                "^cluster-[a-z]+/.*/release\\.ya?ml$"
+            ],
+            "matchStrings": [
+                "image:\n.*repository: (?<depName>.*?)\n.*tag: (?<currentValue>.*?)\n"
+            ],
+            "datasourceTemplate": "docker"
+        }
+    ]
+}
