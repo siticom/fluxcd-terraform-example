@@ -9,18 +9,6 @@ resource "tls_private_key" "fluxcd_ssh_key" {
   ecdsa_curve = "P384"
 }
 
-data "kubectl_file_documents" "fluxcd_sync" {
-  content = data.flux_sync.main.content
-}
-
-locals {
-  sync = [for v in data.kubectl_file_documents.fluxcd_sync.documents : {
-    data : yamldecode(v)
-    content : v
-    }
-  ]
-}
-
 resource "kubernetes_secret" "fluxcd_ssh_key" {
   metadata {
     name      = data.flux_sync.main.secret
